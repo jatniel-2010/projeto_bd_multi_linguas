@@ -24,7 +24,6 @@ create table sala_chat (
 );
 SELECT * FROM sala_chat;
 
-INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('11', '12', )
-INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('23', '24', )
+INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('1', '2', )
+INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('3', '4', )
 INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('30', '31', )
-
