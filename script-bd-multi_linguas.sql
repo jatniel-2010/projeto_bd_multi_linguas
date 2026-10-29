@@ -4,7 +4,6 @@ CREATE TABLE escola(
   cnpj             varchar(18),
   email_contato    varchar(100) not null,
   data_cadastro    timestamp
-
 );
 
 SELECT * FROM escola;
@@ -26,7 +25,6 @@ CREATE TABLE usuario (
   fk_turma INT,
   data_cadastro TIMESTAMP,
   constraint fk_turma foreign key (fk_turma) references turma (id_turma)
-
 );
 
 SELECT * FROM usuario;
