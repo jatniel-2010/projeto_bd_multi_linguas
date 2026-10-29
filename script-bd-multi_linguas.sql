@@ -125,32 +125,103 @@ drop TABLE professor
 drop TABLE pessoa
 drop TABLE turma
 
-CREATE TABLE usuario (
-   id_usuario SERIAL PRIMARY KEY,
-   nome VARCHAR(100) NOT NULL,
-   email VARCHAR(100) NOT NULL ,
-   senha_hash VARCHAR(255) NOT NULL,
-   data_nascimento DATE NOT NULL,
-   faixa_etaria VARCHAR(255) NOT NULL,
-   tipo_perfil  VARCHAR(255) NOT NULL,
-   id_turma INT,
-   data_cadastro TIMESTAMP
-);
-SELECT * FROM usuario;
-
-INSERT INTO usuario (nome, email, senha_hash, data_nascimento, faixa_etaria, tipo_perfil, id_turma, data_cadastro) values ('jatniel', 'jatniel@gmail.com', '1234', '2011/05/14', '15', 'estudioso', '1', '2026/1/1')
-
-
-
 create table sala_chat (
- id_sala INT generated always as identity primary key,
- id_usuario_1 INT not null,
- id_usuario_2 INT not null,
- autorizado_por_responsavel boolean,
- data_criacao timestamp
+  id_sala INT generated always as identity primary key,
+  fk_usuario_1 INT not null,
+  fk_usuario_2 INT not null,
+  autorizado_por_responsavel boolean,
+  data_criacao timestamp,
+  constraint fk_usuario_01 foreign key (fk_usuario_1)references usuario (id_usuario),
+  constraint fk_usuario_02 foreign key (fk_usuario_2)references usuario (id_usuario)
 );
+
 SELECT * FROM sala_chat;
 
-INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('1', '2', )
-INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('3', '4', )
-INSERT INTO sala_chat (usuario_1, id_usuario_2, autorizado_por_responsavel, data_criacao) values ('30', '31', )
+INSERT INTO sala_chat (fk_usuario_1, fk_usuario_2) values (1, 2);
+
+INSERT INTO sala_chat (fk_usuario_1, fk_usuario_2) values (3, 2);
+
+INSERT INTO sala_chat (fk_usuario_1, fk_usuario_2) values (3, 1);
+
+
+CREATE TABLE mensagem_chat(
+  id_mensagem SERIAL PRIMARY KEY,
+  fk_sala int     not null,
+  fk_usuario        int not null,
+  texto_original    text not null,
+  texto_traduzido       timestamp,
+  idioma_origem     varchar(10) not null,
+  idioma_destino    varchar(10) not null,
+  comtem_conteudo_inapropriado    boolean,
+  data_envio    timestamp,
+  constraint fk_sala foreign key (fk_sala)references sala_chat (id_sala),
+  constraint fk_usuario foreign key (fk_usuario)references usuario (id_usuario)
+);
+
+
+SELECT * FROM  mensagem_chat;
+
+INSERT INTO mensagem_chat (fk_sala, fk_emissor ,texto_original ,texto_traduzido, idioma_origem, idioma_destino) VALUES ();
+
+
+CREATE TABLE assinatura_vip (
+  id_assinatura SERIAL PRIMARY KEY,
+  fk_usuario INT NOT NULL,
+  tipo_plano varchar (10) NOT NULL,
+  status varchar (20) NOT NULL,
+  cota_semanal_traducoes INT,
+  traducoes_usadas_semana INT,
+  data_inicio TIMESTAMP,
+  data_expiracao TIMESTAMP,
+   constraint fk_usuario foreign key (fk_usuario)references usuario (id_usuario)
+
+);
+
+drop table assinatura_vip;
+
+SELECT * FROM assinatura_vip
+
+INSERT INTO assinatura_vip (fk_usuario, tipo_plano, status) VALUES (1, 'gold', 'Acesso liberado');
+
+INSERT INTO assinatura_vip (fk_usuario, tipo_plano, status) VALUES (2, 'bronze', 'Subindo de nível');
+
+INSERT INTO assinatura_vip (fk_usuario, tipo_plano, status) VALUES (3, 'bronze', 'Subindo de nível');
+
+CREATE TABLE avaliacao_nivel(
+  id_avaliacao SERIAL PRIMARY KEY,
+  fk_usuario     int NOT NULL,
+  pontuacao_obtida decimal(5,2) NOT NULL,
+  nivel_resultante  varchar(20) NOT NULL,
+  eh_reavaliacao_obrigatoria boolean,
+  data_realizacao  timestamp,
+  constraint fk_usuario foreign key (fk_usuario)references usuario (id_usuario)
+
+);
+
+SELECT * FROM avaliacao_nivel
+
+
+INSERT INTO  avaliacao_nivel (fk_usuario, pontuacao_obtida, nivel_resultante, data_realizacao) VALUES (1, 7.5, 17, '11-09-2001');
+
+INSERT INTO  avaliacao_nivel (fk_usuario, pontuacao_obtida, nivel_resultante, data_realizacao) VALUES (2, 0.3, 17, '11-09-2001');
+
+INSERT INTO  avaliacao_nivel (fk_usuario, pontuacao_obtida, nivel_resultante, data_realizacao) VALUES (3, 5, 17, '12-09-2001');
+
+CREATE TABLE progresso_aprendizado (
+  id_progresso SERIAL PRIMARY KEY,
+  fk_usuario int NOT NULL,
+  fk_avaliacao int NOT NULL,
+  minutos_praticados int NOT NULL,
+  licoes_concluidas int NOT NULL,
+  data_registro date NOT NULL,
+  constraint fk_usuario foreign key (fk_usuario)references usuario (id_usuario),
+  constraint fk_avaliacao foreign key (fk_avaliacao)references avaliacao_nivel (id_avaliacao)
+
+);
+SELECT * FROM progresso_aprendizado
+
+INSERT INTO progresso_aprendizado (fk_usuario, fk_avaliacao, minutos_praticados, licoes_concluidas, data_registro) VALUES (1, 1, 59, 5,'01-09-2021');
+
+INSERT INTO progresso_aprendizado (fk_usuario, fk_avaliacao, minutos_praticados, licoes_concluidas, data_registro) VALUES (1, 1, 43, 4,'02-10-2021');
+
+INSERT INTO progresso_aprendizado (fk_usuario, fk_avaliacao, minutos_praticados, licoes_concluidas, data_registro) VALUES (1, 1, 12, 2,'21-09-2021');
